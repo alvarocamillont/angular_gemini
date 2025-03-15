@@ -373,3 +373,34 @@ Agora que você já possui sua API key, vamos iniciar a configuração do nosso 
 
             *   O texto real na resposta será gerado pelo Gemini com base no seu prompt.
         * Se ocorrer um erro, verifique no terminal que está rodando a aplicação se houve alguma mensagem de erro. Também certifique-se de que a api key no arquivo `.env` está correta.
+
+## Iniciando o Projeto Frontend (Angular)
+
+Agora que o backend está configurado e funcionando, vamos iniciar a criação do nosso projeto frontend com Angular.
+
+1.  **Criando o Projeto Angular:**
+    *   Abra um novo terminal (mantenha o terminal do backend rodando).
+    *   Navegue até a pasta raiz do seu projeto principal, onde está a pasta `backend`. Você deve ficar na mesma raiz em que foi criado o projeto backend.
+    *   Execute o seguinte comando:
+        ```bash
+        ng new frontend --skip-git --routing --style=scss
+        ```
+        *   **Explicação do comando:**
+            *   `ng new frontend`: Este comando cria um novo projeto Angular chamado "frontend". Você pode substituir "frontend" pelo nome que desejar.
+            *   `--skip-git`: Esta flag impede que o Angular CLI inicialize um novo repositório Git dentro da pasta do projeto frontend. Isso é importante porque estamos utilizando o mesmo repositório Git para o projeto completo (backend e frontend).
+            * `--routing`: Esta flag adiciona o modulo de roteamento no projeto.
+            * `--style=scss`: Essa flag define o uso de scss para os estilos do projeto.
+        * **Importante:**  O projeto do frontend deve ser criado na raiz do projeto principal. Assim como o projeto do backend, em um nivel de hierarquia igual, para utilizar o mesmo controle de versao.
+    *   Responda `Y` para usar o routting e selecione `SCSS` para o formato de estilo.
+
+2. **Acessando a pasta do projeto:**
+    * Use o seguinte comando para entrar dentro da pasta do projeto front end:
+      ```bash
+        cd frontend
+      ```
+3. **Executando o Projeto:**
+    *   Para iniciar o projeto frontend, execute o seguinte comando:
+        ```bash
+        npm start
+        ```
+    * Isso ira iniciar a aplicacao na porta 4200 (http://localhost:4200).
