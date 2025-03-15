@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { GenAiResponse } from './gen-ai-response.interface';
+import { GenAiResponse } from './interfaces/gen-ai-response.interface';
 
 @Injectable()
 export class PromptService {

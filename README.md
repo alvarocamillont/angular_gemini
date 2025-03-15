@@ -204,8 +204,10 @@ Agora que você já possui sua API key, vamos iniciar a configuração do nosso 
 
 9.  **Criando a Interface `GenAiResponse`:**
     * Agora vamos criar uma interface para definir a estrutura da resposta que será enviada para o frontend após receber o texto gerado pelo Gemini.
-    *   **Criando o Arquivo:**
-        *   Dentro da pasta `src/prompt`, crie um novo arquivo chamado `interfaces/gen-ai-response.interface.ts`.
+    *   **Criando a Pasta:**
+        * Dentro da pasta `src/prompt`, crie uma nova pasta chamada `interfaces`.
+    * **Criando o Arquivo:**
+        * Dentro da pasta `src/prompt/interfaces`, crie um novo arquivo chamado `gen-ai-response.interface.ts`.
     *   **Adicionando o código da Interface:**
         *   Dentro do arquivo `gen-ai-response.interface.ts`, adicione o seguinte código:
         ```typescript
@@ -225,7 +227,7 @@ Agora que você já possui sua API key, vamos iniciar a configuração do nosso 
         import { Injectable } from '@nestjs/common';
         import { ConfigService } from '@nestjs/config';
         import { GoogleGenerativeAI } from '@google/generative-ai';
-        import { GenAiResponse } from './gen-ai-response.interface';
+        import { GenAiResponse } from './interfaces/gen-ai-response.interface';
         ```
     * **Implementando a lógica do Serviço:**
         * Adicione o seguinte código dentro da classe `PromptService`:
@@ -256,6 +258,45 @@ Agora que você já possui sua API key, vamos iniciar a configuração do nosso 
             * Cria uma instancia do `GoogleGenerativeAI` no constructor.
             * Cria um metodo `generateText` que ira receber o prompt, chamar o gemini e retornar a mensagem.
 
+11. **Implementando o Controller `PromptController`:**
+    * Agora vamos implementar o controller `PromptController`, que será responsável por receber as requisições do frontend, utilizar o `PromptService` e retornar a resposta.
+    * **Abrindo o arquivo:**
+        * Abra o arquivo `src/prompt/prompt.controller.ts` no seu editor de código.
+    * **Importando as Dependências:**
+        * Adicione as seguintes importações no topo do arquivo:
+        ```typescript
+        import { Controller, Post, Body } from '@nestjs/common';
+        import { PromptService } from './prompt.service';
+        import { GenAiResponse } from './interfaces/gen-ai-response.interface';
+        import { ApiTags, ApiOperation } from '@nestjs/swagger';
+        import { GenerateTextDto } from './dto/generate-text.dto';
+        ```
+    * **Implementando a lógica do Controller:**
+        * Adicione o seguinte código dentro da classe `PromptController`:
+        ```typescript
+        @ApiTags('prompt')
+        @Controller('prompt')
+        export class PromptController {
+            constructor(private readonly promptService: PromptService) {}
+
+            @Post()
+            @ApiOperation({ summary: 'Generate text with Gemini' })
+            async generateText(
+                @Body() generateTextDto: GenerateTextDto,
+            ): Promise<GenAiResponse> {
+                return this.promptService.generateText(generateTextDto.prompt);
+            }
+        }
+        ```
+        * Este código faz o seguinte:
+            * Importa o `Controller`, `Post` e `Body` do `@nestjs/common` para definir a classe como um Controller.
+            * Importa o `GenerateTextDto` para receber o parametro da requisicao.
+            * Importa o `PromptService` para utilizar o metodo.
+            * Importa o `GenAiResponse` para definir o retorno do metodo.
+            * Importa o `ApiTags` and `ApiOperation` from `@nestjs/swagger` to group the routes and define a description in the swagger.
+            * Define o path do controller como `prompt`
+            * Cria um metodo chamado `generateText` que ira receber o `GenerateTextDto`, enviar o `prompt` para o service e retornar a resposta.
+    
 
 ## Iniciando o Projeto Frontend (Angular)
 
@@ -264,18 +305,4 @@ Agora que o backend está configurado, vamos iniciar o projeto frontend:
 1.  **Criando o Projeto:**
     *   Abra um **novo** terminal (mantenha o terminal do backend aberto).
     *   Navegue até a pasta raiz do seu projeto, onde você criou a pasta `backend`.
-    *   Execute o seguinte comando: `ng new frontend --skip-git --style=scss` (você pode substituir "frontend" pelo nome desejado para seu projeto).
-        *   O uso da flag `--skip-git` impede que o Angular crie uma nova pasta `.git` dentro da pasta do projeto frontend, evitando assim, que haja mais de um controle de versão no mesmo projeto. Essa flag deve ser utilizada caso você for utilizar somente um repositorio para os projetos de backend e front end.
-        * A flag `--style=scss` adiciona o uso do `scss` no projeto, caso deseje utilizar, se nao desejar pode remover a flag
-    *   Responda `N` quando perguntado se deseja adicionar o Angular Routing.
-
-2.  **Executando o Projeto:**
-    *   Após criar o projeto, acesse a pasta do projeto frontend: `cd frontend`
-    *   Execute o seguinte comando para iniciar o projeto: `ng serve`
-    *   Acesse `http://localhost:4200/` no seu navegador para ver a aplicação Angular em execução.
-
-## Desenvolvendo com Backend e Frontend no Mesmo Repositório
-
-Se você optou por criar os projetos `backend` e `frontend` na mesma pasta raiz, aqui estão algumas considerações:
-
-*   **Dois Terminais:** Você precisará de dois terminais abertos: um para o backend (NestJS) e outro para o frontend (Angular).
+    *   Execute o seguinte comando: `ng new frontend --skip-git
