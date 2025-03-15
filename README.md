@@ -137,6 +137,21 @@ Agora que você já possui sua API key, vamos iniciar a configuração do nosso 
     ```
     * Este comando irá criar uma nova pasta `prompt`, contendo o modulo, dentro de `src`
 
+7. **Criando o Serviço e o Controller no Módulo Prompt:**
+    * Agora que o módulo `prompt` foi criado, vamos adicionar um serviço e um controller a ele.
+    * **Criando o Serviço:**
+        * No terminal, ainda dentro da pasta `backend` do projeto, execute o seguinte comando:
+        ```bash
+            nest generate service prompt/prompt
+        ```
+        * Este comando irá criar um arquivo `prompt.service.ts` e `prompt.service.spec.ts` dentro da pasta `src/prompt`.
+    * **Criando o Controller:**
+        * No terminal, ainda dentro da pasta `backend` do projeto, execute o seguinte comando:
+        ```bash
+            nest generate controller prompt/prompt
+        ```
+        * Este comando irá criar um arquivo `prompt.controller.ts` e `prompt.controller.spec.ts` dentro da pasta `src/prompt`.
+
 ## Iniciando o Projeto Frontend (Angular)
 
 Agora que o backend está configurado, vamos iniciar o projeto frontend:
