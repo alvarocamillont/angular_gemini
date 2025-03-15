@@ -136,6 +136,37 @@ Agora que você já possui sua API key, vamos iniciar a configuração do nosso 
         nest generate module prompt
     ```
     * Este comando irá criar uma nova pasta `prompt`, contendo o módulo, dentro de `src`.
+    * **Importando o `ConfigModule` no `PromptModule`:**
+        * Após criar o módulo, abra o arquivo `src/prompt/prompt.module.ts`.
+        * Dentro do `imports` do `@Module`, adicione `ConfigModule`. Esse passo é **crucial** para que o `PromptService` possa injetar o `ConfigService` e acessar a API Key.
+        * O arquivo `src/prompt/prompt.module.ts` deve ficar semelhante a:
+        ```typescript
+        import { Module } from '@nestjs/common';
+        import { PromptService } from './prompt.service';
+        import { PromptController } from './prompt.controller';
+        import { ConfigModule } from '@nestjs/config'; // Importe o ConfigModule aqui
+
+        @Module({
+          imports: [ConfigModule], // Adicione o ConfigModule dentro do array de imports.
+          controllers: [PromptController],
+          providers: [PromptService],
+        })
+        export class PromptModule {}
+        ```
+        *  **Explicação:**
+          *   O `ConfigModule` é necessário porque o `PromptService` precisa do `ConfigService` para ler a API key do arquivo `.env`. Ao importar `ConfigModule` dentro de `PromptModule`, nós estamos tornando o `ConfigService` disponível para injeção dentro deste módulo e seus providers (como o `PromptService`).
+           * **Importante**: É necessário importar o `PromptModule` dentro do `AppModule` em `src/app.module.ts`. Abra o `src/app.module.ts` e adicione o `PromptModule` no array de `imports`:
+            ```ts
+                import { Module } from '@nestjs/common';
+                import { AppController } from './app.controller';
+                import { ConfigModule } from '@nestjs/config';
+                import { PromptModule } from './prompt/prompt.module'; //Importe aqui
+
+                @Module({
+                  imports: [ConfigModule.forRoot(), PromptModule], // Adicione aqui
+                })
+                export class AppModule {}
+            ```
 
 7. **Criando o Serviço e o Controller no Módulo Prompt:**
     * Agora que o módulo `prompt` foi criado, vamos adicionar um serviço e um controller a ele.
