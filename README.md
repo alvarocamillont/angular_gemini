@@ -87,7 +87,7 @@ Agora que você já possui sua API key, vamos iniciar a configuração do nosso 
     import { ConfigModule } from '@nestjs/config';
 
     @Module({
-      imports: [ConfigModule.forRoot(), //... resto do seu codigo
+      imports: [ConfigModule.forRoot()], //... resto do seu codigo
     })
     ```
 
@@ -122,7 +122,7 @@ Agora que você já possui sua API key, vamos iniciar a configuração do nosso 
     *   Após concluir os passos acima, execute o seguinte comando para iniciar o projeto `npm run start:dev`.
 
 5. **Instalando o SDK do Gemini:**
-    * Agora vamos instalar o SDK do gemini no projeto backend
+    * Agora vamos instalar o SDK do Gemini no projeto backend.
     * No terminal, ainda dentro da pasta `backend` do projeto, execute o seguinte comando:
         ```bash
         npm install @google/generative-ai
@@ -135,7 +135,7 @@ Agora que você já possui sua API key, vamos iniciar a configuração do nosso 
     ```bash
         nest generate module prompt
     ```
-    * Este comando irá criar uma nova pasta `prompt`, contendo o modulo, dentro de `src`
+    * Este comando irá criar uma nova pasta `prompt`, contendo o módulo, dentro de `src`.
 
 7. **Criando o Serviço e o Controller no Módulo Prompt:**
     * Agora que o módulo `prompt` foi criado, vamos adicionar um serviço e um controller a ele.
@@ -152,6 +152,56 @@ Agora que você já possui sua API key, vamos iniciar a configuração do nosso 
         ```
         * Este comando irá criar um arquivo `prompt.controller.ts` e `prompt.controller.spec.ts` dentro da pasta `src/prompt`.
 
+8. **Criando o DTO `GenerateTextDto`:**
+    *   Agora vamos criar um DTO (Data Transfer Object) para definir a estrutura de dados que será enviada pelo frontend para solicitar a geração de texto.
+    *   **Criando o Arquivo:**
+        *   Dentro da pasta `src/prompt`, crie um novo arquivo chamado `dto/generate-text.dto.ts`.
+    *   **Adicionando o código do DTO:**
+        *   Dentro do arquivo `generate-text.dto.ts`, adicione o seguinte código:
+
+        ```typescript
+        import { ApiProperty } from '@nestjs/swagger';
+
+        export class GenerateTextDto {
+          @ApiProperty({
+            name: 'prompt',
+            description: 'Texto da pergunta',
+            type: 'string',
+            required: true,
+          })
+          prompt: string;
+        }
+        ```
+        * Este DTO terá uma propriedade, `prompt`, que é do tipo `string` e é `required` (obrigatória).
+
+        *   **Instalando o `@nestjs/swagger`**:
+            *   Para poder utilizar o `ApiProperty`, iremos instalar o `@nestjs/swagger`:
+            ```bash
+            npm install --save @nestjs/swagger swagger-ui-express
+            ```
+            * Importe e configure o swagger no `src/main.ts`:
+            ```ts
+            import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+            import { NestFactory } from '@nestjs/core';
+            import { AppModule } from './app.module';
+
+            async function bootstrap() {
+              const app = await NestFactory.create(AppModule);
+
+              // Configure Swagger
+              const config = new DocumentBuilder()
+                .setTitle('Gemini Backend')
+                .setDescription('Gemini Example')
+                .setVersion('1.0')
+                .build();
+              const document = SwaggerModule.createDocument(app, config);
+              SwaggerModule.setup('api', app, document); // O endpoint para acessar o Swagger será: http://localhost:3000/api
+              await app.listen(3000);
+            }
+            bootstrap();
+            ```
+            * Adicione `import { GenerateTextDto } from './dto/generate-text.dto';` em `src/prompt/prompt.controller.ts` e utilize-o como parâmetro para uma das requisições dentro do controller.
+
 ## Iniciando o Projeto Frontend (Angular)
 
 Agora que o backend está configurado, vamos iniciar o projeto frontend:
@@ -162,10 +212,10 @@ Agora que o backend está configurado, vamos iniciar o projeto frontend:
     *   Execute o seguinte comando: `ng new frontend --skip-git --style=scss` (você pode substituir "frontend" pelo nome desejado para seu projeto).
         *   O uso da flag `--skip-git` impede que o Angular crie uma nova pasta `.git` dentro da pasta do projeto frontend, evitando assim, que haja mais de um controle de versão no mesmo projeto. Essa flag deve ser utilizada caso você for utilizar somente um repositorio para os projetos de backend e front end.
         * A flag `--style=scss` adiciona o uso do `scss` no projeto, caso deseje utilizar, se nao desejar pode remover a flag
-    *   Responda `N` quando perguntado se deseja adicionar o Angular Routing
+    *   Responda `N` quando perguntado se deseja adicionar o Angular Routing.
 
 2.  **Executando o Projeto:**
-    *   Após criar o projeto acesse a pasta do projeto frontend: `cd frontend`
+    *   Após criar o projeto, acesse a pasta do projeto frontend: `cd frontend`
     *   Execute o seguinte comando para iniciar o projeto: `ng serve`
     *   Acesse `http://localhost:4200/` no seu navegador para ver a aplicação Angular em execução.
 
@@ -176,3 +226,4 @@ Se você optou por criar os projetos `backend` e `frontend` na mesma pasta raiz,
 *   **Dois Terminais:** Você precisará de dois terminais abertos: um para o backend (NestJS) e outro para o frontend (Angular).
 *   **Executando Simultaneamente:**  Você deve executar `npm run start:dev` no terminal da pasta `backend` e `ng serve` no terminal da pasta `frontend`.
 *   **.gitignore:** Adicione no .gitignore na raiz do seu projeto as seguintes linhas para evitar subir o node_modules:
+
