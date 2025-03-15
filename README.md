@@ -121,6 +121,15 @@ Agora que você já possui sua API key, vamos iniciar a configuração do nosso 
 4.  **Executando o Projeto**:
     *   Após concluir os passos acima, execute o seguinte comando para iniciar o projeto `npm run start:dev`.
 
+5. **Instalando o SDK do Gemini:**
+    * Agora vamos instalar o SDK do gemini no projeto backend
+    * No terminal, ainda dentro da pasta `backend` do projeto, execute o seguinte comando:
+        ```bash
+        npm install @google/generative-ai
+        ```
+    * Este comando instala o pacote `@google/generative-ai`, que é o SDK oficial do Google para acessar as APIs do Gemini.
+
+
 ## Iniciando o Projeto Frontend (Angular)
 
 Agora que o backend está configurado, vamos iniciar o projeto frontend:
