@@ -202,6 +202,61 @@ Agora que você já possui sua API key, vamos iniciar a configuração do nosso 
             ```
             * Adicione `import { GenerateTextDto } from './dto/generate-text.dto';` em `src/prompt/prompt.controller.ts` e utilize-o como parâmetro para uma das requisições dentro do controller.
 
+9.  **Criando a Interface `GenAiResponse`:**
+    * Agora vamos criar uma interface para definir a estrutura da resposta que será enviada para o frontend após receber o texto gerado pelo Gemini.
+    *   **Criando o Arquivo:**
+        *   Dentro da pasta `src/prompt`, crie um novo arquivo chamado `interfaces/gen-ai-response.interface.ts`.
+    *   **Adicionando o código da Interface:**
+        *   Dentro do arquivo `gen-ai-response.interface.ts`, adicione o seguinte código:
+        ```typescript
+            export interface GenAiResponse {
+                text: string;
+            }
+        ```
+    * Esta interface terá uma propriedade chamada `text`, que é do tipo `string`.
+
+10. **Implementando o Serviço `PromptService`:**
+    * Agora vamos implementar o serviço `PromptService`, que será responsável por interagir com o Gemini utilizando o SDK instalado.
+    * **Abrindo o arquivo:**
+        * Abra o arquivo `src/prompt/prompt.service.ts` no seu editor de código.
+    * **Importando as Dependências:**
+        * Adicione as seguintes importações no topo do arquivo:
+        ```typescript
+        import { Injectable } from '@nestjs/common';
+        import { ConfigService } from '@nestjs/config';
+        import { GoogleGenerativeAI } from '@google/generative-ai';
+        import { GenAiResponse } from './gen-ai-response.interface';
+        ```
+    * **Implementando a lógica do Serviço:**
+        * Adicione o seguinte código dentro da classe `PromptService`:
+        ```typescript
+        @Injectable()
+        export class PromptService {
+            private readonly apiKey: string;
+            private genAI: GoogleGenerativeAI;
+
+            constructor(private readonly configService: ConfigService) {
+                this.apiKey = this.configService.get<string>('GEMINI_API_KEY') || '';
+                this.genAI = new GoogleGenerativeAI(this.apiKey);
+            }
+            async generateText(prompt: string): Promise<GenAiResponse> {
+                const model = this.genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+                const result = await model.generateContent(prompt);
+                const response = result.response; 
+                const text = response.text();
+                return { text };
+            }
+        }
+        ```
+        * Este código faz o seguinte:
+            * Importa o `Injectable` para definir a classe como um Service.
+            * Importa o `ConfigService` para poder pegar a `apiKey`.
+            * Importa o `GoogleGenerativeAI` para poder utilizar o sdk.
+            * Importa a interface `GenAiResponse` para o retorno do metodo.
+            * Cria uma instancia do `GoogleGenerativeAI` no constructor.
+            * Cria um metodo `generateText` que ira receber o prompt, chamar o gemini e retornar a mensagem.
+
+
 ## Iniciando o Projeto Frontend (Angular)
 
 Agora que o backend está configurado, vamos iniciar o projeto frontend:
@@ -224,6 +279,3 @@ Agora que o backend está configurado, vamos iniciar o projeto frontend:
 Se você optou por criar os projetos `backend` e `frontend` na mesma pasta raiz, aqui estão algumas considerações:
 
 *   **Dois Terminais:** Você precisará de dois terminais abertos: um para o backend (NestJS) e outro para o frontend (Angular).
-*   **Executando Simultaneamente:**  Você deve executar `npm run start:dev` no terminal da pasta `backend` e `ng serve` no terminal da pasta `frontend`.
-*   **.gitignore:** Adicione no .gitignore na raiz do seu projeto as seguintes linhas para evitar subir o node_modules:
-
