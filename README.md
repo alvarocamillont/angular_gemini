@@ -296,13 +296,17 @@ Agora que você já possui sua API key, vamos iniciar a configuração do nosso 
             * Importa o `ApiTags` and `ApiOperation` from `@nestjs/swagger` to group the routes and define a description in the swagger.
             * Define o path do controller como `prompt`
             * Cria um metodo chamado `generateText` que ira receber o `GenerateTextDto`, enviar o `prompt` para o service e retornar a resposta.
-    
 
-## Iniciando o Projeto Frontend (Angular)
-
-Agora que o backend está configurado, vamos iniciar o projeto frontend:
-
-1.  **Criando o Projeto:**
-    *   Abra um **novo** terminal (mantenha o terminal do backend aberto).
-    *   Navegue até a pasta raiz do seu projeto, onde você criou a pasta `backend`.
-    *   Execute o seguinte comando: `ng new frontend --skip-git
+12. **Limpando os Arquivos Padrão do NestJS:**
+    * Agora que criamos a estrutura necessária para nossa aplicação, vamos remover os arquivos padrão de exemplo do NestJS que não serão utilizados.
+    * **Removendo `app.controller.ts` e `app.controller.spec.ts`:**
+        * Abra o arquivo `src/app.controller.ts` no seu editor de código.
+        * Remova todo o conteúdo do arquivo e salve-o. Você pode deixa-lo vazio ou remover o arquivo.
+        * Abra o arquivo `src/app.controller.spec.ts` no seu editor de código.
+        * Remova todo o conteúdo do arquivo e salve-o. Você pode deixa-lo vazio ou remover o arquivo.
+    * **Removendo `app.service.ts` e `app.service.spec.ts`:**
+        * Abra o arquivo `src/app.service.ts` no seu editor de código.
+        * Remova todo o conteúdo do arquivo e salve-o. Você pode deixa-lo vazio ou remover o arquivo.
+    * **Corrigindo `app.module.ts`:**
+        * Abra o arquivo `src/app.module.ts` no seu editor de código.
+        * Remova a importacao do controllers e providers dos arquivos excluidos.
