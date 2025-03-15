@@ -341,3 +341,35 @@ Agora que você já possui sua API key, vamos iniciar a configuração do nosso 
     * **Corrigindo `app.module.ts`:**
         * Abra o arquivo `src/app.module.ts` no seu editor de código.
         * Remova a importacao do controllers e providers dos arquivos excluidos.
+
+13. **Executando a Aplicação e Testando a API com Curl:**
+    *   Agora que o backend está configurado, vamos executá-lo e testar a API usando o `curl`.
+    *   **Iniciando a Aplicação:**
+        *   Abra um terminal dentro da pasta `backend`.
+        *   Execute o seguinte comando: `npm run start:dev`
+        *   Isso iniciará o servidor NestJS em modo de desenvolvimento, geralmente na porta 3000 (http://localhost:3000).
+        * Você pode abrir o swagger em `http://localhost:3000/api`
+
+    *   **Testando a API com Curl:**
+        *   Abra **outro** terminal (deixe o primeiro rodando o servidor).
+        *   Execute o seguinte comando `curl` para enviar uma requisição POST para o endpoint `/prompt` e testar a integração com o Gemini:
+
+        ```bash
+        curl -X POST -H "Content-Type: application/json" -d '{"prompt": "Escreva uma frase sobre tecnologia."}' http://localhost:3000/prompt
+        ```
+        *   **Explicação do Comando:**
+            *   `curl`: O comando para fazer requisições HTTP na linha de comando.
+            *   `-X POST`: Especifica que é uma requisição POST.
+            *   `-H "Content-Type: application/json"`: Define o cabeçalho para indicar que estamos enviando dados JSON.
+            *   `-d '{"prompt": "Escreva uma frase sobre tecnologia."}'`: Envia os dados da requisição no formato JSON. Substitua `"Escreva uma frase sobre tecnologia."` pela pergunta que você deseja.
+            *   `http://localhost:3000/prompt`: O URL do endpoint que estamos acessando.
+
+        *   **Resposta Esperada:**
+            *   Se tudo estiver configurado corretamente, você deverá receber uma resposta JSON semelhante a:
+
+            ```json
+            {"text": "A tecnologia está revolucionando a forma como vivemos, trabalhamos e nos comunicamos."}
+            ```
+
+            *   O texto real na resposta será gerado pelo Gemini com base no seu prompt.
+        * Se ocorrer um erro, verifique no terminal que está rodando a aplicação se houve alguma mensagem de erro. Também certifique-se de que a api key no arquivo `.env` está correta.
