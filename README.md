@@ -129,6 +129,13 @@ Agora que você já possui sua API key, vamos iniciar a configuração do nosso 
         ```
     * Este comando instala o pacote `@google/generative-ai`, que é o SDK oficial do Google para acessar as APIs do Gemini.
 
+6. **Criando o Módulo Prompt:**
+    *  Agora vamos criar um novo módulo chamado `prompt` dentro do projeto backend. Este módulo será responsável por conter a lógica de comunicação com o Gemini.
+    * No terminal, ainda dentro da pasta `backend` do projeto, execute o seguinte comando:
+    ```bash
+        nest generate module prompt
+    ```
+    * Este comando irá criar uma nova pasta `prompt`, contendo o modulo, dentro de `src`
 
 ## Iniciando o Projeto Frontend (Angular)
 
@@ -154,4 +161,3 @@ Se você optou por criar os projetos `backend` e `frontend` na mesma pasta raiz,
 *   **Dois Terminais:** Você precisará de dois terminais abertos: um para o backend (NestJS) e outro para o frontend (Angular).
 *   **Executando Simultaneamente:**  Você deve executar `npm run start:dev` no terminal da pasta `backend` e `ng serve` no terminal da pasta `frontend`.
 *   **.gitignore:** Adicione no .gitignore na raiz do seu projeto as seguintes linhas para evitar subir o node_modules:
-
