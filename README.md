@@ -417,3 +417,15 @@ Agora que o backend está configurado e funcionando, vamos iniciar a criação d
     *   **Removendo conteudos de `app.component.ts`:**
         *   Abra o arquivo `src/app/app.component.ts`.
         *   Remova todo o conteudo dentro dele.
+5.  **Criando o Componente de Chat:**
+    *   Agora vamos criar o componente principal da nossa interface de chat.
+    *   **Gerando o componente:**
+        *   No terminal, dentro da pasta `frontend` (onde você executou o `npm start`), execute o seguinte comando:
+            ```bash
+            ng generate component chat
+            ```
+            ou
+            ```bash
+             ng g c chat
+            ```
+        *   Este comando irá criar uma nova pasta `chat` dentro de `src/app`, contendo os arquivos do componente `chat`.
