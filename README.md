@@ -414,9 +414,6 @@ Agora que o backend está configurado e funcionando, vamos iniciar a criação d
     *   **Removendo os conteudos de estilo do componente**:
         *   Abra o arquivo `src/app/app.component.scss`.
         *   Remova todo o conteudo dentro dele.
-    *   **Removendo conteudos de `app.component.ts`:**
-        *   Abra o arquivo `src/app/app.component.ts`.
-        *   Remova todo o conteudo dentro dele.
 5.  **Criando o Componente de Chat:**
     *   Agora vamos criar o componente principal da nossa interface de chat.
     *   **Gerando o componente:**
@@ -429,3 +426,11 @@ Agora que o backend está configurado e funcionando, vamos iniciar a criação d
              ng g c chat
             ```
         *   Este comando irá criar uma nova pasta `chat` dentro de `src/app`, contendo os arquivos do componente `chat`.
+6. **Adicionando o Componente Chat ao AppComponent:**
+    * Agora que criamos o componente de chat, precisamos adicioná-lo ao `AppComponent` para que ele seja exibido na página principal da aplicação.
+    *   **Utilizando o componente Chat no `AppComponent`:**
+        *   Abra o arquivo `src/app/app.component.html`.
+        *   Adicione a tag `<app-chat></app-chat>` dentro do arquivo.
+        *   Abra o arquivo `src/app/app.component.ts`.
+        *   Importe o componente `ChatComponent` pois estamos utilizando os standalone components
+        *   Agora o component chat será carregado ao abrir a pagina principal.
