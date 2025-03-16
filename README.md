@@ -404,3 +404,16 @@ Agora que o backend está configurado e funcionando, vamos iniciar a criação d
         npm start
         ```
     * Isso ira iniciar a aplicacao na porta 4200 (http://localhost:4200).
+4.  **Limpando os arquivos padrão do Angular:**
+    *   Agora que o projeto foi gerado, vamos remover os arquivos de exemplo do angular que nao iremos utilizar.
+    *   **Removendo conteudos de `app.component.html`:**
+        *   Abra o arquivo `src/app/app.component.html`.
+        *   Remova todo o conteudo dentro dele.
+    *   **Removendo os arquivos de teste do component**:
+        *   Remova o arquivo `src/app/app.component.spec.ts`
+    *   **Removendo os conteudos de estilo do componente**:
+        *   Abra o arquivo `src/app/app.component.scss`.
+        *   Remova todo o conteudo dentro dele.
+    *   **Removendo conteudos de `app.component.ts`:**
+        *   Abra o arquivo `src/app/app.component.ts`.
+        *   Remova todo o conteudo dentro dele.
