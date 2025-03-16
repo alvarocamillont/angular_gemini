@@ -433,4 +433,51 @@ Agora que o backend está configurado e funcionando, vamos iniciar a criação d
         *   Adicione a tag `<app-chat></app-chat>` dentro do arquivo.
         *   Abra o arquivo `src/app/app.component.ts`.
         *   Importe o componente `ChatComponent` pois estamos utilizando os standalone components
-        *   Agora o component chat será carregado ao abrir a pagina principal.
+        *   Agora o component chat será carregado ao abrir a pagina principal:
+        ```typescript
+            @Component({
+            selector: 'app-root',
+            imports: [RouterOutlet,ChatComponent],
+            templateUrl: './app.component.html',
+            styleUrl: './app.component.scss'
+            })
+            export class AppComponent {
+            }
+        ```
+7.  **Criando o Template HTML da Interface de Chat:**
+    *   Agora vamos construir o template HTML do componente `ChatComponent`, que define a estrutura visual da nossa interface de chat.
+    *   **Abrindo o arquivo `chat.component.html`:**
+        *   Abra o arquivo `src/app/chat/chat.component.html`.
+    *   **Adicionando o código HTML:**
+        *   Adicione o seguinte código HTML ao arquivo `chat.component.html`:
+
+        ```html
+        <div class="chat-container">
+          <div class="chat-header">
+            <h1>Gemini Chat</h1>
+          </div>
+          <div class="chat-messages">
+            <div class="message">
+              <div class="message-content">Olá! Como posso ajudar?</div>
+            </div>
+            <div class="message user-message">
+              <div class="message-content">Como funciona?</div>
+            </div>
+          </div>
+          <div class="chat-input">
+            <input type="text" placeholder="Digite sua mensagem..." />
+            <button>Enviar</button>
+          </div>
+        </div>
+        ```
+    *   **Explicação do código HTML:**
+        *   `chat-container`: Um container principal para toda a interface de chat.
+        *   `chat-header`: A área do cabeçalho, onde exibiremos o título "Gemini Chat".
+        *   `chat-messages`: Um container para as mensagens do chat.
+        *   `message`: Um container para uma única mensagem.
+            *   `message-content`: O conteúdo da mensagem.
+        *   `user-message`: Uma classe para distinguir as mensagens do usuário (você pode adicionar depois para destacar visualmente).
+        * `chat-input`: Um container para o input e botão de envio.
+            * `input`: Campo para digitar a mensagem.
+            * `button`: Botão para enviar a mensagem.
+    * Após adicionar esse código, seu template html terá uma visualização basica do chat com um header, uma lista de mensagens e um input de texto com um botao.
