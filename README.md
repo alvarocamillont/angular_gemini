@@ -711,11 +711,11 @@ Agora que o backend está configurado e funcionando, vamos iniciar a criação d
           standalone: true,
         })
         export class ChatComponent {
-          constructor(private promptService: PromptService) {}
+          private promptService = inject(PromptService);
         }
         ```
         *   **Explicação do código:**
-            *   `constructor(private promptService: PromptService) {}`: Injeta o `PromptService` no construtor do componente, permitindo que ele seja usado dentro da classe.
+            *   `private promptService = inject(PromptService);`: Injeta o `PromptService` no componente, permitindo que ele seja usado dentro da classe.
 
 11.  **Criando a Estrutura de Dados de Mensagem no `ChatComponent`:**
     *   Para armazenar e gerenciar as mensagens do chat, vamos criar uma interface e um array para armazená-las.
@@ -743,26 +743,27 @@ Agora que o backend está configurado e funcionando, vamos iniciar a criação d
         * O codigo completo do `src/app/chat/chat.component.ts` deve ficar parecido com isso:
 
             ```ts
-            import { Component } from '@angular/core';
-            import { PromptService } from '../prompt/prompt.service';
+                import { Component, inject } from '@angular/core';
+                import { PromptService } from '../prompt.service';
 
-            interface ChatMessage {
+                interface ChatMessage {
                 content: string;
                 isUser: boolean;
-            }
-            @Component({
-              selector: 'app-chat',
-              templateUrl: './chat.component.html',
-              styleUrl: './chat.component.scss',
-              standalone: true,
-            })
-            export class ChatComponent {
-              messages: ChatMessage[] = [
-                { content: 'Olá! Como posso ajudar?', isUser: false },
-                { content: 'Como funciona?', isUser: true },
-              ];
-              constructor(private promptService: PromptService) {}
-            }
+                }
+
+                @Component({
+                selector: 'app-chat',
+                imports: [],
+                templateUrl: './chat.component.html',
+                styleUrl: './chat.component.scss'
+                })
+                export class ChatComponent {
+                private promptService = inject(PromptService);
+                messages: ChatMessage[] = [
+                    { content: 'Olá! Como posso ajudar?', isUser: false },
+                    { content: 'Como funciona?', isUser: true },
+                ];
+                }
             ```
 
         *   **Explicação do código:**
@@ -776,7 +777,7 @@ Agora que o backend está configurado e funcionando, vamos iniciar a criação d
     * **Abrindo o Arquivo `chat.component.html`:**
         * Abra o arquivo `src/app/chat/chat.component.html`.
     * **Alterando o codigo:**
-        * Iremos trocar o `div` message estatico por um `div` dinamico utilizando o `*ngFor`. O novo codigo ficará assim:
+        * Iremos trocar o `div` message estatico por um `div` dinamico utilizando o `@for`. O novo codigo ficará assim:
         ```html
         <div class="chat-container">
           <div class="chat-header">
