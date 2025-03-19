@@ -641,23 +641,23 @@ Agora que o backend está configurado e funcionando, vamos iniciar a criação d
     *   **Adicionando o codigo do service:**
         *   Abra o arquivo `src/app/prompt/prompt.service.ts` e adicione o seguinte codigo:
         ```ts
-        import { Injectable } from '@angular/core';
-        import { HttpClient } from '@angular/common/http';
-        import { Observable } from 'rxjs';
-        import { environment } from 'src/environments/environment';
+            import { HttpClient } from '@angular/common/http';
+            import { inject, Injectable } from '@angular/core';
+            import { Observable } from 'rxjs';
+            import { environment } from '../environments/environment';
 
-        @Injectable({
-          providedIn: 'root',
-        })
-        export class PromptService {
-          private apiUrl = `${environment.apiUrl}/prompt`;
+            @Injectable({
+            providedIn: 'root'
+            })
+            export class PromptService {
 
-          constructor(private http: HttpClient) {}
+            private http = inject(HttpClient);
+            private apiUrl = `${environment.apiUrl}/prompt`;
 
-          generateText(prompt: string): Observable<{ text: string }> {
-            return this.http.post<{ text: string }>(this.apiUrl, { prompt });
-          }
-        }
+            generateText(prompt: string): Observable<{ text: string }> {
+                return this.http.post<{ text: string }>(this.apiUrl, { prompt });
+            }
+            }
         ```
         *   **Explicação do código:**
             *   `import { HttpClient } from '@angular/common/http';`: Importa o `HttpClient`, que será usado para fazer requisições HTTP.
@@ -665,18 +665,23 @@ Agora que o backend está configurado e funcionando, vamos iniciar a criação d
             *   `import { environment } from 'src/environments/environment';`: importa as variaveis de ambiente, onde sera definido o url base da api.
             *   `@Injectable({ providedIn: 'root' })`: Marca a classe como um serviço injetável. `providedIn: 'root'` indica que o serviço deve ser um singleton disponível em toda a aplicação.
             *   `private apiUrl = `${environment.apiUrl}/prompt`;`: Define a URL base da API, que será `http://localhost:3000/prompt`. Utilizamos uma variavel de ambiente para evitar hard code.
-            *   `constructor(private http: HttpClient) {}`: Injeta o `HttpClient` no construtor.
+            *   `private http = inject(HttpClient);`: Injeta o `HttpClient` no construtor.
             *   `generateText(prompt: string): Observable<{ text: string }> {`: Define o metodo de enviar o prompt para a api.
               * `return this.http.post<{ text: string }>(this.apiUrl, { prompt });`: realiza uma requisicao post para a url. O retorno do metodo será um objeto do tipo `{text: string}`.
     * **Adicionando as variaveis de ambiente:**
-        * Abra o arquivo `src/environments/environment.ts` e defina a variavel `apiUrl`.
+        * Crie os arquivos de ambiente com o seguinte comando:
+        ```bash
+        ng generate environments
+        ```
+        
+        * Abra o arquivo `src/environments/environment.dev.ts` e defina a variavel `apiUrl`.
         ```ts
         export const environment = {
             production: false,
             apiUrl: 'http://localhost:3000',
         };
         ```
-        * Abra o arquivo `src/environments/environment.prod.ts` e defina a variavel `apiUrl`.
+        * Abra o arquivo `src/environments/environment.ts` e defina a variavel `apiUrl`.
         ```ts
         export const environment = {
             production: true,
