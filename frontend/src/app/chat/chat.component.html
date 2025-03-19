@@ -3,12 +3,12 @@
     <h1>Gemini Chat</h1>
   </div>
   <div class="chat-messages">
-    <div class="message">
-      <div class="message-content">Olá! Como posso ajudar?</div>
-    </div>
-    <div class="message user-message">
-      <div class="message-content">Como funciona?</div>
-    </div>
+    @for (message of messages; track $index) {
+      <div class="message" [class.user-message]="message.isUser">
+        <div class="message-content">{{ message.content }}</div>
+      </div>
+    }
+
   </div>
   <div class="chat-input">
     <input type="text" placeholder="Digite sua mensagem..." />

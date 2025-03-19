@@ -638,6 +638,18 @@ Agora que o backend está configurado e funcionando, vamos iniciar a criação d
             ```
         *   Este comando irá criar uma nova pasta `prompt` dentro de `src/app`, contendo os arquivos do serviço `PromptService`.
         *   Remova o arquivo `src/app/prompt/prompt.service.spec.ts` pois não iremos utilizar ele.
+    *   **Adicionando o provider do HttpClient ao projeto**
+        *   Abra o arquivo `src/app/app.config.ts` e adicione o seguinte codigo:
+        ```ts
+            import { provideHttpClient } from '@angular/common/http';
+            import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+
+            export const appConfig: ApplicationConfig = {
+            providers: [provideZoneChangeDetection({ eventCoalescing: true }),provideHttpClient()]
+            };
+        ```ts
+    *   **Explicação do código:**
+        *   `import { provideHttpClient } from '@angular/common/http';`: Importa o `HttpClient`, que será usado para fazer requisições HTTP.
     *   **Adicionando o codigo do service:**
         *   Abra o arquivo `src/app/prompt/prompt.service.ts` e adicione o seguinte codigo:
         ```ts
@@ -779,23 +791,26 @@ Agora que o backend está configurado e funcionando, vamos iniciar a criação d
     * **Alterando o codigo:**
         * Iremos trocar o `div` message estatico por um `div` dinamico utilizando o `@for`. O novo codigo ficará assim:
         ```html
-        <div class="chat-container">
-          <div class="chat-header">
-            <h1>Gemini Chat</h1>
-          </div>
-          <div class="chat-messages">
-            <div *ngFor="let message of messages" class="message" [class.user-message]="message.isUser">
-              <div class="message-content">{{ message.content }}</div>
+            <div class="chat-container">
+            <div class="chat-header">
+                <h1>Gemini Chat</h1>
             </div>
-          </div>
-          <div class="chat-input">
-            <input type="text" placeholder="Digite sua mensagem..." />
-            <button>Enviar</button>
-          </div>
-        </div>
+            <div class="chat-messages">
+                @for (message of messages; track $index) {
+                <div class="message" [class.user-message]="message.isUser">
+                    <div class="message-content">{{ message.content }}</div>
+                </div>
+                }
+
+            </div>
+            <div class="chat-input">
+                <input type="text" placeholder="Digite sua mensagem..." />
+                <button>Enviar</button>
+            </div>
+            </div>
         ```
         * **Explicação:**
-            * `*ngFor="let message of messages"`: Itera sobre o array `messages`, criando um novo elemento `div` para cada mensagem.
+            * `@for (message of messages; track $index)`: Itera sobre o array `messages`, criando um novo elemento `div` para cada mensagem.
             * `[class.user-message]="message.isUser"`: Adiciona a classe `user-message` apenas se a propriedade `isUser` da mensagem for `true`. Isso permitirá que você estilize as mensagens do usuário de forma diferente das mensagens do Gemini.
             * `{{ message.content }}`: Exibe o conteúdo da mensagem.
     * Com essa alteracao seu chat ja exibirá as mensagens iniciais definidas no component.
