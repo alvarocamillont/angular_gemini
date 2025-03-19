@@ -490,145 +490,439 @@ Agora que o backend está configurado e funcionando, vamos iniciar a criação d
         *   Adicione o seguinte código SCSS ao arquivo `chat.component.scss`:
 
         ```scss
-        .chat-container {
-          background-color: #343541;
-          display: flex;
-          flex-direction: column;
-          height: 80vh;
-          width: 90vw;
-          max-width: 1000px;
-          border-radius: 10px;
-          overflow: hidden;
-          margin: 20px auto;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-
-          .chat-header {
-            background-color: #202123;
-            padding: 15px;
-            text-align: center;
-            border-bottom: 1px solid #40414f;
-
-            h1 {
-              font-size: 1.4em;
-              margin: 0;
-              color: #ececf1;
-            }
-          }
-
-          .chat-messages {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 15px;
+            .chat-container {
+            background-color: #343541;
             display: flex;
             flex-direction: column;
-            &::-webkit-scrollbar {
-              width: 8px;
-            }
-            &::-webkit-scrollbar-thumb {
-              background-color: #5d5d6e;
-              border-radius: 4px;
-            }
+            height: 100vh;
+            width: 100vw;
+            max-width: none;
+            border-radius: 0;
+            overflow: hidden;
+            margin: 0;
+            box-shadow: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
 
-            .message {
-              margin-bottom: 15px;
-              display: flex;
-              align-items: flex-start;
+            .chat-header {
+                background-color: #202123;
+                padding: 15px;
+                text-align: center;
+                border-bottom: 1px solid #40414f;
 
-              .message-content {
-                background-color: #40414f;
-                padding: 12px 15px;
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-                max-width: 70%;
-                word-wrap: break-word;
+                h1 {
+                font-size: 1.6em; /* Increased header font size */
+                margin: 0;
                 color: #ececf1;
-                white-space: pre-wrap;
-              }
+                }
             }
 
-            .user-message {
-              justify-content: flex-end;
-
-              .message-content {
+            .chat-messages {
+                flex-grow: 1;
+                overflow-y: auto;
+                padding: 15px;
+                display: flex;
+                flex-direction: column;
+                &::-webkit-scrollbar {
+                width: 8px;
+                }
+                &::-webkit-scrollbar-thumb {
                 background-color: #5d5d6e;
-              }
+                border-radius: 4px;
+                }
+
+                .message {
+                margin-bottom: 15px;
+                display: flex;
+                align-items: flex-start;
+
+                .message-content {
+                    background-color: #40414f;
+                    padding: 12px 15px;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                    max-width: 70%;
+                    word-wrap: break-word;
+                    color: #ececf1;
+                    white-space: pre-wrap;
+                    font-size: 1.1em; /* Increased message font size */
+                }
+                }
+
+                .user-message {
+                justify-content: flex-end;
+
+                .message-content {
+                    background-color: #5d5d6e;
+                }
+                }
             }
-          }
 
-          .chat-input {
-            display: flex;
-            padding: 15px;
-            border-top: 1px solid #40414f;
-            background-color: #202123;
+            .chat-input {
+                display: flex;
+                padding: 15px;
+                border-top: 1px solid #40414f;
+                background-color: #202123;
+                align-items: center; /* Align items vertically */
 
-            input {
-              flex-grow: 1;
-              border: none;
-              border-radius: 8px;
-              padding: 12px 15px;
-              margin-right: 10px;
-              outline: none;
-              background-color: #40414f;
-              color: #ececf1;
-              &::placeholder{
+                input {
+                flex-grow: 1;
+                border: none;
+                border-radius: 8px;
+                padding: 15px 20px; /* Increased padding */
+                margin-right: 10px;
+                outline: none;
+                background-color: #40414f;
                 color: #ececf1;
-                opacity: 0.7;
-              }
+                font-size: 1.1em; /* Increased input font size */
+                min-height: 50px; /* Increased input height */
+                &::placeholder {
+                    color: #ececf1;
+                    opacity: 0.7;
+                }
+                }
+
+                button {
+                background-color: #ececf1;
+                color: #202123;
+                border: none;
+                border-radius: 8px;
+                padding: 12px 15px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+                height: 50px; /* Match button height to input */
+                font-size: 1.1em; /* Increased button font size */
+
+                &:hover {
+                    background-color: #c7c7d0;
+                }
+                }
+            }
             }
 
-            button {
-              background-color: #ececf1;
-              color: #202123;
-              border: none;
-              border-radius: 8px;
-              padding: 12px 15px;
-              cursor: pointer;
-              transition: background-color 0.3s;
+            // Media query for smaller screens (optional)
+            @media (max-width: 768px) {
+            .chat-container {
+                .chat-messages {
+                padding: 10px;
+                }
 
-              &:hover {
-                background-color: #c7c7d0;
-              }
+                .chat-input {
+                padding: 10px;
+                input {
+                    padding: 12px 15px;
+                    min-height: 40px;
+                }
+                button{
+                    height: 40px;
+                }
+                }
             }
+        }
+
+        ```
+
+
+9.  **Criando o Serviço `PromptService` no Frontend:**
+    *   Agora vamos criar um serviço Angular responsável por consumir a API do nosso backend.
+    *   **Gerando o serviço:**
+        *   No terminal, dentro da pasta `frontend`, execute o seguinte comando:
+            ```bash
+            ng generate service prompt
+            ```
+            ou
+            ```bash
+            ng g s prompt
+            ```
+        *   Este comando irá criar uma nova pasta `prompt` dentro de `src/app`, contendo os arquivos do serviço `PromptService`.
+        *   Remova o arquivo `src/app/prompt/prompt.service.spec.ts` pois não iremos utilizar ele.
+    *   **Adicionando o codigo do service:**
+        *   Abra o arquivo `src/app/prompt/prompt.service.ts` e adicione o seguinte codigo:
+        ```ts
+        import { Injectable } from '@angular/core';
+        import { HttpClient } from '@angular/common/http';
+        import { Observable } from 'rxjs';
+        import { environment } from 'src/environments/environment';
+
+        @Injectable({
+          providedIn: 'root',
+        })
+        export class PromptService {
+          private apiUrl = `${environment.apiUrl}/prompt`;
+
+          constructor(private http: HttpClient) {}
+
+          generateText(prompt: string): Observable<{ text: string }> {
+            return this.http.post<{ text: string }>(this.apiUrl, { prompt });
           }
         }
         ```
+        *   **Explicação do código:**
+            *   `import { HttpClient } from '@angular/common/http';`: Importa o `HttpClient`, que será usado para fazer requisições HTTP.
+            *   `import { Observable } from 'rxjs';`: Importa `Observable` para lidar com as respostas assíncronas.
+            *   `import { environment } from 'src/environments/environment';`: importa as variaveis de ambiente, onde sera definido o url base da api.
+            *   `@Injectable({ providedIn: 'root' })`: Marca a classe como um serviço injetável. `providedIn: 'root'` indica que o serviço deve ser um singleton disponível em toda a aplicação.
+            *   `private apiUrl = `${environment.apiUrl}/prompt`;`: Define a URL base da API, que será `http://localhost:3000/prompt`. Utilizamos uma variavel de ambiente para evitar hard code.
+            *   `constructor(private http: HttpClient) {}`: Injeta o `HttpClient` no construtor.
+            *   `generateText(prompt: string): Observable<{ text: string }> {`: Define o metodo de enviar o prompt para a api.
+              * `return this.http.post<{ text: string }>(this.apiUrl, { prompt });`: realiza uma requisicao post para a url. O retorno do metodo será um objeto do tipo `{text: string}`.
+    * **Adicionando as variaveis de ambiente:**
+        * Abra o arquivo `src/environments/environment.ts` e defina a variavel `apiUrl`.
+        ```ts
+        export const environment = {
+            production: false,
+            apiUrl: 'http://localhost:3000',
+        };
+        ```
+        * Abra o arquivo `src/environments/environment.prod.ts` e defina a variavel `apiUrl`.
+        ```ts
+        export const environment = {
+            production: true,
+            apiUrl: 'http://localhost:3000', //altere para o endereço da sua api em producao
+        };
+        ```
 
-    *   **Explicação do código SCSS:**
-        *   `.chat-container`:
-            * `background-color: #343541;`: Cor de fundo escura.
-            *   `display: flex; flex-direction: column;`: Define o container como um flexbox para organizar os elementos verticalmente.
-            *   `height: 80vh; width: 90vw;`: Define a altura e largura do container de maneira responsiva
-            *   `max-width: 1000px;`: Define largura máxima
-            *   `border-radius`,  `overflow`, `margin`, `box-shadow`: Estilos para criar uma borda, cantos arredondados, controle de overflow, margem e sombra para o container.
-        *   `.chat-header`:
-            *   `background-color: #202123;`: Um tom mais escuro para o header.
-            *   `padding`, `text-align`, `border-bottom`: Estilos para criar um cabeçalho com cor de fundo, padding, alinhamento de texto e borda inferior.
-            *   `h1`: Define os estilos para o título no cabeçalho.
-        *   `.chat-messages`:
-            *   `flex-grow: 1;`: Permite que as mensagens ocupem todo o espaço disponível.
-            *   `overflow-y: auto;`: Adiciona scroll vertical se necessário.
-            *   `padding`: Define um espaçamento interno.
-            * `&::-webkit-scrollbar` and `&::-webkit-scrollbar-thumb`: Define o estilo da barra de rolagem
-            *   `display: flex; flex-direction: column`: organiza as mensagens em forma de coluna.
-        *   `.message`:
-            *   `margin-bottom`, `display: flex;`: Adiciona margem entre as mensagens.
-            *   `.message-content`:
-                * `background-color: #40414f;`: cor de fundo escura
-                *   `padding`, `border-radius`, `box-shadow`, `max-width`, `word-wrap`: Define a cor de fundo, espaçamento interno, borda arredondada, sombra, largura máxima e quebra de texto.
-                * `color: #ececf1;`: Define a cor do texto
-                * `white-space: pre-wrap;`: Mantem as quebras de linha do texto
-        * `.user-message`:
-            * `justify-content: flex-end;`: Alinha as mensagens do usuário para o lado direito.
-            * `.message-content`: Define uma cor de fundo diferente para a mensagem do usuário.
-        *   `.chat-input`:
-            *   `display: flex`, `padding`, `border-top`: Define um layout flexível, espaçamento interno e borda superior para a área de entrada.
-            * `background-color: #202123;`: define a cor de fundo para a área de entrada.
-            *   `input`:
-                *   `flex-grow`, `border`, `border-radius`, `padding`, `margin-right`, `outline`: Estilos para o campo de entrada de texto.
-                * `background-color: #40414f;`: Define a cor de fundo
-                * `color: #ececf1;`: Define a cor do texto
-                * `&::placeholder`: Define o estilo do placeholder.
-            *   `button`:
-                *   `background-color`, `color`, `border`, `border-radius`, `padding`, `cursor`, `transition`: Estilos para o botão de enviar.
-                *   `&:hover`: Define estilos para quando o mouse está sobre o botão.
-    * Com a adição desse codigo, seu chat ja tera um visual semelhante ao chat gpt.
+10. **Integrando o `PromptService` ao `ChatComponent`:**
+    *   Agora que criamos o serviço, vamos integrá-lo ao `ChatComponent` para enviar mensagens ao backend e exibir as respostas.
+    *   **Abrindo o arquivo `chat.component.ts`:**
+        *   Abra o arquivo `src/app/chat/chat.component.ts`.
+    *   **Importando as Dependências:**
+        *   Adicione as seguintes importações no topo do arquivo:
+        ```ts
+        import { PromptService } from '../prompt/prompt.service';
+        ```
+    *   **Implementando a Lógica no Componente:**
+        *   Adicione o seguinte código dentro da classe `ChatComponent`:
+        ```ts
+        import { Component } from '@angular/core';
+        import { PromptService } from '../prompt/prompt.service';
+
+        @Component({
+          selector: 'app-chat',
+          templateUrl: './chat.component.html',
+          styleUrl: './chat.component.scss',
+          standalone: true,
+        })
+        export class ChatComponent {
+          constructor(private promptService: PromptService) {}
+        }
+        ```
+        *   **Explicação do código:**
+            *   `constructor(private promptService: PromptService) {}`: Injeta o `PromptService` no construtor do componente, permitindo que ele seja usado dentro da classe.
+
+11.  **Criando a Estrutura de Dados de Mensagem no `ChatComponent`:**
+    *   Para armazenar e gerenciar as mensagens do chat, vamos criar uma interface e um array para armazená-las.
+    *   **Abrindo o arquivo `chat.component.ts`:**
+        *   Abra o arquivo `src/app/chat/chat.component.ts`.
+    *   **Criando a Interface `ChatMessage`:**
+        *   Adicione o seguinte código **dentro** do arquivo `chat.component.ts`, **fora** da classe `ChatComponent`, antes do `@Component`:
+
+        ```ts
+        interface ChatMessage {
+          content: string;
+          isUser: boolean;
+        }
+        ```
+
+    *   **Adicionando o Array `messages`:**
+        *   Adicione o seguinte código **dentro** da classe `ChatComponent`:
+
+        ```ts
+        messages: ChatMessage[] = [
+            { content: 'Olá! Como posso ajudar?', isUser: false },
+            { content: 'Como funciona?', isUser: true },
+        ];
+        ```
+        * O codigo completo do `src/app/chat/chat.component.ts` deve ficar parecido com isso:
+
+            ```ts
+            import { Component } from '@angular/core';
+            import { PromptService } from '../prompt/prompt.service';
+
+            interface ChatMessage {
+                content: string;
+                isUser: boolean;
+            }
+            @Component({
+              selector: 'app-chat',
+              templateUrl: './chat.component.html',
+              styleUrl: './chat.component.scss',
+              standalone: true,
+            })
+            export class ChatComponent {
+              messages: ChatMessage[] = [
+                { content: 'Olá! Como posso ajudar?', isUser: false },
+                { content: 'Como funciona?', isUser: true },
+              ];
+              constructor(private promptService: PromptService) {}
+            }
+            ```
+
+        *   **Explicação do código:**
+            *   `interface ChatMessage`: Define a estrutura de uma mensagem do chat, contendo:
+                *   `content`: O texto da mensagem.
+                *   `isUser`: Um booleano indicando se a mensagem é do usuário (`true`) ou do Gemini (`false`).
+            *   `messages: ChatMessage[] = [];`: Cria um array vazio para armazenar as mensagens, pre definido com as mensagens iniciais de exemplo.
+
+12. **Exibindo as Mensagens no Template:**
+    * Agora vamos atualizar o template HTML para exibir as mensagens armazenadas no array `messages`.
+    * **Abrindo o Arquivo `chat.component.html`:**
+        * Abra o arquivo `src/app/chat/chat.component.html`.
+    * **Alterando o codigo:**
+        * Iremos trocar o `div` message estatico por um `div` dinamico utilizando o `*ngFor`. O novo codigo ficará assim:
+        ```html
+        <div class="chat-container">
+          <div class="chat-header">
+            <h1>Gemini Chat</h1>
+          </div>
+          <div class="chat-messages">
+            <div *ngFor="let message of messages" class="message" [class.user-message]="message.isUser">
+              <div class="message-content">{{ message.content }}</div>
+            </div>
+          </div>
+          <div class="chat-input">
+            <input type="text" placeholder="Digite sua mensagem..." />
+            <button>Enviar</button>
+          </div>
+        </div>
+        ```
+        * **Explicação:**
+            * `*ngFor="let message of messages"`: Itera sobre o array `messages`, criando um novo elemento `div` para cada mensagem.
+            * `[class.user-message]="message.isUser"`: Adiciona a classe `user-message` apenas se a propriedade `isUser` da mensagem for `true`. Isso permitirá que você estilize as mensagens do usuário de forma diferente das mensagens do Gemini.
+            * `{{ message.content }}`: Exibe o conteúdo da mensagem.
+    * Com essa alteracao seu chat ja exibirá as mensagens iniciais definidas no component.
+13. **Adicionando a Lógica de Envio de Mensagens:**
+    *   Agora vamos adicionar a lógica para enviar mensagens ao backend e exibir a resposta.
+    *   **Adicionando a Propriedade `newMessage`:**
+        *   Abra o arquivo `src/app/chat/chat.component.ts`.
+        *   Adicione a seguinte propriedade dentro da classe `ChatComponent`:
+
+        ```ts
+        newMessage = '';
+        ```
+        *   **Explicação do código:**
+            *   `newMessage = '';`: Uma string que armazena o texto da mensagem digitada pelo usuário.
+
+    *   **Criando o Método `sendMessage`:**
+        *   Adicione o seguinte método dentro da classe `ChatComponent`:
+
+        ```ts
+        sendMessage() {
+            if (this.newMessage.trim() === '') return;
+
+            this.messages.push({ content: this.newMessage, isUser: true });
+            this.promptService.generateText(this.newMessage).subscribe(
+                (response) => {
+                    this.messages.push({ content: response.text, isUser: false });
+                },
+                (error) => {
+                    console.error('Erro ao obter resposta:', error);
+                }
+            );
+            this.newMessage = '';
+        }
+        ```
+
+        *   **Explicação do código:**
+            *   `if (this.newMessage.trim() === '') return;`: Impede o envio de mensagens vazias.
+            *   `this.messages.push({ content: this.newMessage, isUser: true });`: Adiciona a mensagem do usuário ao array `messages`.
+            *   `this.promptService.generateText(this.newMessage).subscribe(...)`: Chama o método `generateText` do `PromptService` para enviar a mensagem ao backend.
+                *   `(response) => { ... }`: Função que será executada quando a resposta do backend for recebida com sucesso.
+                    *   `this.messages.push({ content: response.text, isUser: false });`: Adiciona a resposta do backend ao array `messages`.
+                *   `(error) => { ... }`: Função que será executada se ocorrer um erro ao receber a resposta do backend.
+                    *   `console.error('Erro ao obter resposta:', error);`: Exibe o erro no console.
+            *  `this.newMessage = '';`: Limpa o input text.
+    * **Adicionando o NgModel:**
+      * Precisamos adicionar o `ngModel` ao projeto para utilizar a propriedade `newMessage` no template html.
+      * Abra o arquivo `src/app/app.module.ts`
+      * Importe o `FormsModule`
+      ```ts
+         import { FormsModule } from '@angular/forms';
+      ```
+      * Adicione ele no array de `imports` dentro de `@NgModule`
+      ```ts
+            imports: [
+                BrowserModule,
+                AppRoutingModule,
+                HttpClientModule,
+                FormsModule
+            ],
+      ```
+
+    *   **Atualizando o Template:**
+        *   Abra o arquivo `src/app/chat/chat.component.html`.
+        *   Substitua o código do `<input>` e `<button>` pelos seguintes códigos:
+
+        ```html
+        <div class="chat-input">
+            <input type="text" [(ngModel)]="newMessage" placeholder="Digite sua mensagem..." (keyup.enter)="sendMessage()" />
+            <button (click)="sendMessage()">Enviar</button>
+        </div>
+        ```
+        * O código completo do `chat.component.html` ficará parecido com isso:
+
+            ```html
+            <div class="chat-container">
+              <div class="chat-header">
+                <h1>Gemini Chat</h1>
+              </div>
+              <div class="chat-messages">
+                <div *ngFor="let message of messages" class="message" [class.user-message]="message.isUser">
+                  <div class="message-content">{{ message.content }}</div>
+                </div>
+              </div>
+              <div class="chat-input">
+                <input type="text" [(ngModel)]="newMessage" placeholder="Digite sua mensagem..." (keyup.enter)="sendMessage()" />
+                <button (click)="sendMessage()">Enviar</button>
+              </div>
+            </div>
+            ```
+        * O codigo completo do `chat.component.ts` deve estar parecido com isso:
+        ```ts
+            import { Component } from '@angular/core';
+            import { PromptService } from '../prompt/prompt.service';
+
+            interface ChatMessage {
+                content: string;
+                isUser: boolean;
+            }
+
+            @Component({
+              selector: 'app-chat',
+              templateUrl: './chat.component.html',
+              styleUrl: './chat.component.scss',
+              standalone: true,
+            })
+            export class ChatComponent {
+              messages: ChatMessage[] = [
+                { content: 'Olá! Como posso ajudar?', isUser: false },
+                { content: 'Como funciona?', isUser: true },
+              ];
+              newMessage = '';
+              constructor(private promptService: PromptService) {}
+
+                sendMessage() {
+                    if (this.newMessage.trim() === '') return;
+
+                    this.messages.push({ content: this.newMessage, isUser: true });
+                    this.promptService.generateText(this.newMessage).subscribe(
+                        (response) => {
+                            this.messages.push({ content: response.text, isUser: false });
+                        },
+                        (error) => {
+                            console.error('Erro ao obter resposta:', error);
+                        }
+                    );
+                    this.newMessage = '';
+                }
+            }
+        ```
+
+        *   **Explicação do código:**
+            *   `[(ngModel)]="newMessage"`: Faz o two-way data binding entre o valor do input e a propriedade `newMessage` do componente.
+            * `(keyup.enter)="sendMessage()"`:  Chama o metodo `sendMessage` quando a tecla `enter` for pressionada.
+            *   `(click)="sendMessage()"`: Chama o método `sendMessage` quando o botão "Enviar" é clicado.
+
+    * Agora ao digitar no input e clicar em enviar, ou apertar enter, a mensagem será enviada para o backend e a resposta será exibida.

@@ -2,13 +2,17 @@
   background-color: #343541;
   display: flex;
   flex-direction: column;
-  height: 80vh;
-  width: 90vw;
-  max-width: 1000px;
-  border-radius: 10px;
+  height: 100vh;
+  width: 100vw;
+  max-width: none;
+  border-radius: 0;
   overflow: hidden;
-  margin: 20px auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin: 0;
+  box-shadow: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
 
   .chat-header {
     background-color: #202123;
@@ -17,7 +21,7 @@
     border-bottom: 1px solid #40414f;
 
     h1 {
-      font-size: 1.4em;
+      font-size: 1.6em; /* Increased header font size */
       margin: 0;
       color: #ececf1;
     }
@@ -51,6 +55,7 @@
         word-wrap: break-word;
         color: #ececf1;
         white-space: pre-wrap;
+        font-size: 1.1em; /* Increased message font size */
       }
     }
 
@@ -68,17 +73,20 @@
     padding: 15px;
     border-top: 1px solid #40414f;
     background-color: #202123;
+    align-items: center; /* Align items vertically */
 
     input {
       flex-grow: 1;
       border: none;
       border-radius: 8px;
-      padding: 12px 15px;
+      padding: 15px 20px; /* Increased padding */
       margin-right: 10px;
       outline: none;
       background-color: #40414f;
       color: #ececf1;
-      &::placeholder{
+      font-size: 1.1em; /* Increased input font size */
+      min-height: 50px; /* Increased input height */
+      &::placeholder {
         color: #ececf1;
         opacity: 0.7;
       }
@@ -92,9 +100,31 @@
       padding: 12px 15px;
       cursor: pointer;
       transition: background-color 0.3s;
+      height: 50px; /* Match button height to input */
+      font-size: 1.1em; /* Increased button font size */
 
       &:hover {
         background-color: #c7c7d0;
+      }
+    }
+  }
+}
+
+// Media query for smaller screens (optional)
+@media (max-width: 768px) {
+  .chat-container {
+    .chat-messages {
+      padding: 10px;
+    }
+
+    .chat-input {
+      padding: 10px;
+      input {
+        padding: 12px 15px;
+        min-height: 40px;
+      }
+      button{
+        height: 40px;
       }
     }
   }
