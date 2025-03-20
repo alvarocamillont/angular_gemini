@@ -11,7 +11,7 @@
 
   </div>
   <div class="chat-input">
-    <input type="text" placeholder="Digite sua mensagem..." />
-    <button>Enviar</button>
+    <input type="text" [(ngModel)]="newMessage" placeholder="Digite sua mensagem..." (keyup.enter)="sendMessage()" />
+    <button (click)="sendMessage()">Enviar</button>
   </div>
 </div>

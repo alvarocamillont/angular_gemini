@@ -219,6 +219,8 @@ Agora que você já possui sua API key, vamos iniciar a configuração do nosso 
             async function bootstrap() {
               const app = await NestFactory.create(AppModule);
 
+              app.enableCors();
+
               // Configure Swagger
               const config = new DocumentBuilder()
                 .setTitle('Gemini Backend')
@@ -820,127 +822,105 @@ Agora que o backend está configurado e funcionando, vamos iniciar a criação d
         *   Adicione a seguinte propriedade dentro da classe `ChatComponent`:
 
         ```ts
-        newMessage = '';
+        newMessage = model('');
         ```
-        *   **Explicação do código:**
-            *   `newMessage = '';`: Uma string que armazena o texto da mensagem digitada pelo usuário.
 
     *   **Criando o Método `sendMessage`:**
         *   Adicione o seguinte método dentro da classe `ChatComponent`:
 
         ```ts
             sendMessage() {
-                if (this.newMessage.trim() === '') return;
+                if (this.newMessage().trim() === '') return;
 
-                this.messages.update((messages)=>[...messages, {content: this.newMessage, isUser: true}]);
+                this.messages.update((messages)=>[...messages, {content: this.newMessage(), isUser: true}]);
 
-                this.promptService.generateText(this.newMessage).subscribe((response) => {
+                this.promptService.generateText(this.newMessage()).subscribe((response) => {
                 this.messages.update((messages) => [
                     ...messages,
                     { content: response.text, isUser: false },
                 ]);
                 });
 
-                this.newMessage = '';
+                this.newMessage.set('');
+
             }
         ```
-
-        *   **Explicação do código:**
-            *   `if (this.newMessage.trim() === '') return;`: Impede o envio de mensagens vazias.
-            *   `this.messages.update`: Adiciona a mensagem do usuário ao array `messages`.
-            *   `this.promptService.generateText(this.newMessage).subscribe(...)`: Chama o método `generateText` do `PromptService` para enviar a mensagem ao backend.
-                *   `(response) => { ... }`: Função que será executada quando a resposta do backend for recebida com sucesso.
-                *   `this.messages.update`: Adiciona a resposta do backend ao array `messages`.
-            *  `this.newMessage = '';`: Limpa o input text.
-    * **Adicionando o NgModel:**
-      * Precisamos adicionar o `ngModel` ao projeto para utilizar a propriedade `newMessage` no template html.
-      * Abra o arquivo `src/app/app.module.ts`
-      * Importe o `FormsModule`
-      ```ts
-         import { FormsModule } from '@angular/forms';
-      ```
-      * Adicione ele no array de `imports` dentro de `@NgModule`
-      ```ts
-            imports: [
-                BrowserModule,
-                AppRoutingModule,
-                HttpClientModule,
-                FormsModule
-            ],
-      ```
 
     *   **Atualizando o Template:**
         *   Abra o arquivo `src/app/chat/chat.component.html`.
         *   Substitua o código do `<input>` e `<button>` pelos seguintes códigos:
 
         ```html
-        <div class="chat-input">
-            <input type="text" [(ngModel)]="newMessage" placeholder="Digite sua mensagem..." (keyup.enter)="sendMessage()" />
-            <button (click)="sendMessage()">Enviar</button>
-        </div>
+            <div class="chat-input">
+                <input type="text" [(ngModel)]="newMessage" placeholder="Digite sua mensagem..." (keyup.enter)="sendMessage()" />
+                <button (click)="sendMessage()">Enviar</button>
+            </div>
         ```
         * O código completo do `chat.component.html` ficará parecido com isso:
 
             ```html
-            <div class="chat-container">
-              <div class="chat-header">
-                <h1>Gemini Chat</h1>
-              </div>
-              <div class="chat-messages">
-                <div *ngFor="let message of messages" class="message" [class.user-message]="message.isUser">
-                  <div class="message-content">{{ message.content }}</div>
+                <div class="chat-container">
+                <div class="chat-header">
+                    <h1>Gemini Chat</h1>
                 </div>
-              </div>
-              <div class="chat-input">
-                <input type="text" [(ngModel)]="newMessage" placeholder="Digite sua mensagem..." (keyup.enter)="sendMessage()" />
-                <button (click)="sendMessage()">Enviar</button>
-              </div>
-            </div>
+                <div class="chat-messages">
+                    @for (message of messages(); track $index) {
+                    <div class="message" [class.user-message]="message.isUser">
+                        <div class="message-content">{{ message.content }}</div>
+                    </div>
+                    }
+
+                </div>
+                <div class="chat-input">
+                    <input type="text" [(ngModel)]="newMessage" placeholder="Digite sua mensagem..." (keyup.enter)="sendMessage()" />
+                    <button (click)="sendMessage()">Enviar</button>
+                </div>
+                </div>
+
             ```
         * O codigo completo do `chat.component.ts` deve estar parecido com isso:
         ```ts
-            import { Component } from '@angular/core';
-            import { PromptService } from '../prompt/prompt.service';
+            import { Component, inject, model, signal } from '@angular/core';
+            import { PromptService } from '../prompt.service';
+            import { FormsModule } from '@angular/forms';
 
             interface ChatMessage {
-                content: string;
-                isUser: boolean;
+            content: string;
+            isUser: boolean;
             }
 
             @Component({
-              selector: 'app-chat',
-              templateUrl: './chat.component.html',
-              styleUrl: './chat.component.scss',
-              standalone: true,
+            selector: 'app-chat',
+            imports: [FormsModule],
+            templateUrl: './chat.component.html',
+            styleUrl: './chat.component.scss'
             })
             export class ChatComponent {
-              messages: ChatMessage[] = [
-                { content: 'Olá! Como posso ajudar?', isUser: false },
-                { content: 'Como funciona?', isUser: true },
-              ];
-              newMessage = '';
-              constructor(private promptService: PromptService) {}
+            private promptService = inject(PromptService);
+            newMessage = model('');
 
-                sendMessage() {
-                    if (this.newMessage.trim() === '') return;
+            messages = signal([{} as ChatMessage])
 
-                    this.messages.push({ content: this.newMessage, isUser: true });
-                    this.promptService.generateText(this.newMessage).subscribe(
-                        (response) => {
-                            this.messages.push({ content: response.text, isUser: false });
-                        },
-                        (error) => {
-                            console.error('Erro ao obter resposta:', error);
-                        }
-                    );
-                    this.newMessage = '';
-                }
+            sendMessage() {
+
+                if (this.newMessage().trim() === '') return;
+
+                this.messages.update((messages)=>[...messages, {content: this.newMessage(), isUser: true}]);
+
+                this.promptService.generateText(this.newMessage()).subscribe((response) => {
+                this.messages.update((messages) => [
+                    ...messages,
+                    { content: response.text, isUser: false },
+                ]);
+                });
+
+                this.newMessage.set('');
+
             }
+
+            }
+
         ```
 
-        *   **Explicação do código:**
-            *   `[(ngModel)]="newMessage"`: Faz o two-way data binding entre o valor do input e a propriedade `newMessage` do componente.
-            * `(keyup.enter)="sendMessage()"`:  Chama o metodo `sendMessage` quando a tecla `enter` for pressionada.
-            *   `(click)="sendMessage()"`: Chama o método `sendMessage` quando o botão "Enviar" é clicado.
 
     * Agora ao digitar no input e clicar em enviar, ou apertar enter, a mensagem será enviada para o backend e a resposta será exibida.
