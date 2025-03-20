@@ -771,18 +771,17 @@ Agora que o backend está configurado e funcionando, vamos iniciar a criação d
                 })
                 export class ChatComponent {
                 private promptService = inject(PromptService);
-                messages: ChatMessage[] = [
+                messages = signal([
                     { content: 'Olá! Como posso ajudar?', isUser: false },
                     { content: 'Como funciona?', isUser: true },
-                ];
-                }
+                ])
             ```
 
         *   **Explicação do código:**
             *   `interface ChatMessage`: Define a estrutura de uma mensagem do chat, contendo:
                 *   `content`: O texto da mensagem.
                 *   `isUser`: Um booleano indicando se a mensagem é do usuário (`true`) ou do Gemini (`false`).
-            *   `messages: ChatMessage[] = [];`: Cria um array vazio para armazenar as mensagens, pre definido com as mensagens iniciais de exemplo.
+            *   `messages = signal`: Cria um signal para armazenar as mensagens, pre definido com as mensagens iniciais de exemplo.
 
 12. **Exibindo as Mensagens no Template:**
     * Agora vamos atualizar o template HTML para exibir as mensagens armazenadas no array `messages`.
@@ -796,7 +795,7 @@ Agora que o backend está configurado e funcionando, vamos iniciar a criação d
                 <h1>Gemini Chat</h1>
             </div>
             <div class="chat-messages">
-                @for (message of messages; track $index) {
+                @for (message of messages(); track $index) {
                 <div class="message" [class.user-message]="message.isUser">
                     <div class="message-content">{{ message.content }}</div>
                 </div>
@@ -830,30 +829,28 @@ Agora que o backend está configurado e funcionando, vamos iniciar a criação d
         *   Adicione o seguinte método dentro da classe `ChatComponent`:
 
         ```ts
-        sendMessage() {
-            if (this.newMessage.trim() === '') return;
+            sendMessage() {
+                if (this.newMessage.trim() === '') return;
 
-            this.messages.push({ content: this.newMessage, isUser: true });
-            this.promptService.generateText(this.newMessage).subscribe(
-                (response) => {
-                    this.messages.push({ content: response.text, isUser: false });
-                },
-                (error) => {
-                    console.error('Erro ao obter resposta:', error);
-                }
-            );
-            this.newMessage = '';
-        }
+                this.messages.update((messages)=>[...messages, {content: this.newMessage, isUser: true}]);
+
+                this.promptService.generateText(this.newMessage).subscribe((response) => {
+                this.messages.update((messages) => [
+                    ...messages,
+                    { content: response.text, isUser: false },
+                ]);
+                });
+
+                this.newMessage = '';
+            }
         ```
 
         *   **Explicação do código:**
             *   `if (this.newMessage.trim() === '') return;`: Impede o envio de mensagens vazias.
-            *   `this.messages.push({ content: this.newMessage, isUser: true });`: Adiciona a mensagem do usuário ao array `messages`.
+            *   `this.messages.update`: Adiciona a mensagem do usuário ao array `messages`.
             *   `this.promptService.generateText(this.newMessage).subscribe(...)`: Chama o método `generateText` do `PromptService` para enviar a mensagem ao backend.
                 *   `(response) => { ... }`: Função que será executada quando a resposta do backend for recebida com sucesso.
-                    *   `this.messages.push({ content: response.text, isUser: false });`: Adiciona a resposta do backend ao array `messages`.
-                *   `(error) => { ... }`: Função que será executada se ocorrer um erro ao receber a resposta do backend.
-                    *   `console.error('Erro ao obter resposta:', error);`: Exibe o erro no console.
+                *   `this.messages.update`: Adiciona a resposta do backend ao array `messages`.
             *  `this.newMessage = '';`: Limpa o input text.
     * **Adicionando o NgModel:**
       * Precisamos adicionar o `ngModel` ao projeto para utilizar a propriedade `newMessage` no template html.

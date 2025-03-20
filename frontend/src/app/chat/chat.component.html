@@ -3,7 +3,7 @@
     <h1>Gemini Chat</h1>
   </div>
   <div class="chat-messages">
-    @for (message of messages; track $index) {
+    @for (message of messages(); track $index) {
       <div class="message" [class.user-message]="message.isUser">
         <div class="message-content">{{ message.content }}</div>
       </div>

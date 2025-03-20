@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Signal, signal } from '@angular/core';
 import { PromptService } from '../prompt.service';
 
 interface ChatMessage {
@@ -14,8 +14,23 @@ styleUrl: './chat.component.scss'
 })
 export class ChatComponent {
   private promptService = inject(PromptService);
-  messages: ChatMessage[] = [
-      { content: 'Olá! Como posso ajudar?', isUser: false },
-      { content: 'Como funciona?', isUser: true },
-  ];
+  newMessage = '';
+
+  messages = signal([{} as ChatMessage])
+
+  sendMessage() {
+    if (this.newMessage.trim() === '') return;
+
+    this.messages.update((messages)=>[...messages, {content: this.newMessage, isUser: true}]);
+
+    this.promptService.generateText(this.newMessage).subscribe((response) => {
+      this.messages.update((messages) => [
+        ...messages,
+        { content: response.text, isUser: false },
+      ]);
+    });
+
+    this.newMessage = '';
+  }
+
 }
